@@ -12,7 +12,7 @@
       },
       {
         "name": "PBI_QueryOrder",
-        "value": "[\"supply_chain_data\"]"
+        "value": "[\"dim_product\",\"dim_customer_cemographic\",\"dim_shiping_carriers\",\"dim_suppliers_name\",\"dim_location\",\"dim_inspection_result\",\"dim_transportation_mode\",\"dim_routes\",\"Fact_supply_data\",\"_measures\"]"
       },
       {
         "name": "PBI_ProTooling",
@@ -37,11 +37,73 @@
       "returnErrorValuesAsNull": true
     },
     "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "relationships": [
+      {
+        "name": "AutoDetected_ee9f2f1b-9a06-4c93-af5f-54d140174b6e",
+        "fromColumn": "product_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "product_id",
+        "toTable": "dim_product"
+      },
+      {
+        "name": "AutoDetected_a41184fb-fa91-41f8-86d1-107eb278196b",
+        "fromColumn": "cust_demo_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "cust_demo_id",
+        "toTable": "dim_customer_cemographic"
+      },
+      {
+        "name": "AutoDetected_716e2312-9deb-4a3c-b5fd-75876315d4f5",
+        "fromColumn": "ship_carriers_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "ship_carriers_id",
+        "toTable": "dim_shiping_carriers"
+      },
+      {
+        "name": "AutoDetected_617433f1-cc37-4f05-994c-9d4983839df9",
+        "fromColumn": "supplier_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "supplier_id",
+        "toTable": "dim_suppliers_name"
+      },
+      {
+        "name": "AutoDetected_f5fc0266-5219-4f09-8b2f-25204bc712eb",
+        "fromColumn": "location_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "location_id",
+        "toTable": "dim_location"
+      },
+      {
+        "name": "AutoDetected_0b620aa2-e880-464d-952c-b359ebc713dd",
+        "fromColumn": "inspection_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "inspection_id",
+        "toTable": "dim_inspection_result"
+      },
+      {
+        "name": "AutoDetected_c04326fd-a9bc-4bc6-beb2-8ef82e633657",
+        "fromColumn": "transportation_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "transportation_id",
+        "toTable": "dim_transportation_mode"
+      },
+      {
+        "name": "AutoDetected_8c811a7f-abe3-43b1-b751-92f1db3a85e4",
+        "fromColumn": "routes_id",
+        "fromTable": "Fact_supply_data",
+        "toColumn": "routes_id",
+        "toTable": "dim_routes"
+      }
+    ],
     "sourceQueryCulture": "en-US",
     "tables": [
       {
-        "name": "supply_chain_data",
+        "name": "dim_product",
         "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
           {
             "name": "PBI_ResultType",
             "value": "Table"
@@ -57,10 +119,534 @@
               }
             ],
             "dataType": "string",
-            "lineageTag": "f7931307-671f-4442-b5d0-538ea5428baa",
+            "lineageTag": "0de8ba58-9f4a-49f9-b301-71c442d72bfb",
             "sourceColumn": "Product type",
             "summarizeBy": "none"
           },
+          {
+            "name": "product_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "a274b2e6-c843-44f7-9422-09c19d9c0676",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "3f6f7f4e-9eec-4e61-8f3d-ed800c844819",
+        "partitions": [
+          {
+            "name": "dim_product",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Product type\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Removed Duplicates\", \"Custom\", each if [Product type] = \"haircare\" then 1 else if [Product type] = \"skincare\" then 2 else if [Product type] = \"cosmetics\" then 3 else null, type number),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Added Conditional Column\",{{\"Custom\", \"product_id\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_customer_cemographic",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Customer demographics",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "332681f5-7e1c-414c-88b3-142b12bd5c7f",
+            "sourceColumn": "Customer demographics",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "cust_demo_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "c43a15d0-3e65-4f76-a798-558a92d02af2",
+            "sourceColumn": "cust_demo_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "690febd1-b98d-4366-927f-05bedaa85f14",
+        "partitions": [
+          {
+            "name": "dim_customer_cemographic",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Customer demographics\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Removed Duplicates\", \"Custom\", each if [Customer demographics] = \"Non-binary\" then 3 else if [Customer demographics] = \"Female\" then 2 else if [Customer demographics] = \"Unknown\" then 4 else if [Customer demographics] = \"Male\" then 1 else null, type number),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Added Conditional Column\",{{\"Custom\", \"cust_demo_id\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_shiping_carriers",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Shipping carriers",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cc884b8a-51bc-40cc-a725-e422844af538",
+            "sourceColumn": "Shipping carriers",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ship_carriers_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "1aac3240-4449-42b7-99fa-67e83c9c099e",
+            "sourceColumn": "ship_carriers_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "7ddb3252-367b-46df-8142-7fb52c71ee9f",
+        "partitions": [
+          {
+            "name": "dim_shiping_carriers",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Shipping carriers\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Removed Duplicates\", \"Custom\", each if [Shipping carriers] = \"Carrier B\" then 2 else if [Shipping carriers] = \"Carrier A\" then 1 else if [Shipping carriers] = \"Carrier C\" then 3 else null, type number),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Added Conditional Column\",{{\"Custom\", \"ship_carriers_id\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_suppliers_name",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Supplier name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9ecc6280-0545-43e4-aedc-3fccbf48042e",
+            "sourceColumn": "Supplier name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "supplier_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "de9798cd-6674-427b-9b1f-528ab454c7de",
+            "sourceColumn": "supplier_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6ac96b02-4576-4add-adfc-94ba3bd38b97",
+        "partitions": [
+          {
+            "name": "dim_suppliers_name",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Supplier name\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Inserted Text After Delimiter\" = Table.AddColumn(#\"Removed Duplicates\", \"supplier_id\", each Text.AfterDelimiter([Supplier name], \" \"), type text)",
+                "in",
+                "    #\"Inserted Text After Delimiter\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_location",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "990df37c-a994-4596-99a1-5bfe6fa7fbbc",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "location_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "f1f556bd-1722-4f4f-b9fe-4f495fc3a538",
+            "sourceColumn": "location_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6e92162e-c779-4c4d-8b7c-839e2e37b76b",
+        "partitions": [
+          {
+            "name": "dim_location",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Location\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Sorted Rows\" = Table.Sort(#\"Removed Duplicates\",{{\"Location\", Order.Ascending}}),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Sorted Rows\", \"location_id\", each if [Location] = \"Bangalore\" then 1 else if [Location] = \"Chennai\" then 2 else if [Location] = \"Delhi\" then 3 else if [Location] = \"Kolkata\" then 4 else if [Location] = \"Mumbai\" then 5 else null, type number)",
+                "in",
+                "    #\"Added Conditional Column\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_inspection_result",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Inspection results",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "288a9d52-8306-49eb-9e9b-bfe75043f29d",
+            "sourceColumn": "Inspection results",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "inspection_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "0a26f827-7590-4a9d-8b22-ee68835cebaa",
+            "sourceColumn": "inspection_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "3022f6eb-753d-4ad9-bdd5-55e2941145ed",
+        "partitions": [
+          {
+            "name": "dim_inspection_result",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Changed Type\", \"Custom\", each if [Product type] = \"haircare\" then 1 else if [Product type] = \"skincare\" then 2 else if [Product type] = \"cosmetics\" then 3 else null, type number),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Added Conditional Column\",{\"Inspection results\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Removed Duplicates\", \"inspection_id\", each if [Inspection results] = \"Pending\" then 2 else if [Inspection results] = \"Fail\" then 3 else if [Inspection results] = \"Pass\" then 1 else null, type number)",
+                "in",
+                "    #\"Added Conditional Column1\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_transportation_mode",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Transportation modes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2aba6740-1001-4d44-8d36-b8600e7a9558",
+            "sourceColumn": "Transportation modes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transportation_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "3ee77c22-e1b8-42f5-b723-7e0c796cdd2e",
+            "sourceColumn": "transportation_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "ad82fcfe-cf16-4e07-8c42-943752c6e4fa",
+        "partitions": [
+          {
+            "name": "dim_transportation_mode",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Transportation modes\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Removed Duplicates\", \"transportation_id\", each if [Transportation modes] = \"Road\" then 1 else if [Transportation modes] = \"Air\" then 4 else if [Transportation modes] = \"Rail\" then 2 else if [Transportation modes] = \"Sea\" then 3 else null, type number)",
+                "in",
+                "    #\"Added Conditional Column\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_routes",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Routes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "97ad45fa-2671-4835-a7d6-343a6c32a951",
+            "sourceColumn": "Routes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "routes_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "cb8aecce-4527-45c4-8c4e-9c9c668301d6",
+            "sourceColumn": "routes_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "98749c77-f9f8-4900-a376-2b5bde316451",
+        "partitions": [
+          {
+            "name": "dim_routes",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Removed Other Columns\" = Table.SelectColumns(#\"Changed Type\",{\"Routes\"}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Removed Other Columns\"),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Removed Duplicates\", \"routes_id\", each if [Routes] = \"Route B\" then 2 else if [Routes] = \"Route C\" then 3 else if [Routes] = \"Route A\" then 1 else null, type number)",
+                "in",
+                "    #\"Added Conditional Column\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_supply_data",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
           {
             "name": "SKU",
             "annotations": [
@@ -70,7 +656,7 @@
               }
             ],
             "dataType": "string",
-            "lineageTag": "6565bc09-d97a-4d54-8aa7-561eaacc257e",
+            "lineageTag": "4691fee8-c88a-4489-91e9-2ac1aecf364f",
             "sourceColumn": "SKU",
             "summarizeBy": "none"
           },
@@ -87,7 +673,7 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "725672a0-4674-4c34-bd6c-55b3bf26be3d",
+            "lineageTag": "0d3b7175-4b10-4338-89be-95b223a4a315",
             "sourceColumn": "Price",
             "summarizeBy": "sum"
           },
@@ -101,7 +687,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "d20dfc1e-970a-48b9-9d77-b98f0d759db0",
+            "lineageTag": "4bd18805-dbea-4989-a62c-90e2184ce4d8",
             "sourceColumn": "Availability",
             "summarizeBy": "sum"
           },
@@ -115,7 +701,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "a2de1553-18ad-45f3-b798-eb75f5ba8413",
+            "lineageTag": "7838ed96-db46-443a-99a0-99daf6eec3e2",
             "sourceColumn": "Number of products sold",
             "summarizeBy": "sum"
           },
@@ -132,22 +718,9 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "ad6c2ebc-a0db-44fc-a58e-3537ea93242d",
+            "lineageTag": "16321cf6-93d8-4d25-97c3-edab3f33140b",
             "sourceColumn": "Revenue generated",
             "summarizeBy": "sum"
-          },
-          {
-            "name": "Customer demographics",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "8c76580f-1e3e-412a-bfda-8dec20bf1b79",
-            "sourceColumn": "Customer demographics",
-            "summarizeBy": "none"
           },
           {
             "name": "Stock levels",
@@ -159,7 +732,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "e6bc6e89-6d94-4403-b0c1-2ec3ca837892",
+            "lineageTag": "ae1edadc-ff9c-4006-a7a4-7e0defb8637b",
             "sourceColumn": "Stock levels",
             "summarizeBy": "sum"
           },
@@ -173,7 +746,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "2c777ac8-a2c5-4926-b96c-63a7419fbd29",
+            "lineageTag": "ac8f7382-9047-40ab-9b55-3e8913275712",
             "sourceColumn": "Lead times",
             "summarizeBy": "sum"
           },
@@ -187,7 +760,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "26fa7695-5adf-4d45-9797-9634173042de",
+            "lineageTag": "4f3def40-eafc-4f46-8e21-220ad72cae86",
             "sourceColumn": "Order quantities",
             "summarizeBy": "sum"
           },
@@ -201,22 +774,9 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "01fc5202-3c96-4e92-b2cc-672925151c59",
+            "lineageTag": "71f324c4-c619-41be-ae2c-d8eaed154e49",
             "sourceColumn": "Shipping times",
             "summarizeBy": "sum"
-          },
-          {
-            "name": "Shipping carriers",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "c1e9ecdb-3a17-4119-b789-0032a828c31e",
-            "sourceColumn": "Shipping carriers",
-            "summarizeBy": "none"
           },
           {
             "name": "Shipping costs",
@@ -231,35 +791,9 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "9601bbaa-5f86-4a14-83f0-4f79e87669a1",
+            "lineageTag": "d14b9b05-a1d3-43c9-ab7a-9bc0c8a059bf",
             "sourceColumn": "Shipping costs",
             "summarizeBy": "sum"
-          },
-          {
-            "name": "Supplier name",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "ba0e8a39-ba45-4558-963e-3f959560b3f3",
-            "sourceColumn": "Supplier name",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "Location",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "33f01f48-0c02-4d7e-882f-1dce2869d356",
-            "sourceColumn": "Location",
-            "summarizeBy": "none"
           },
           {
             "name": "Lead time",
@@ -271,7 +805,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "149e5f57-7cf5-46e1-86e6-60e44bdb5769",
+            "lineageTag": "8e31ace3-0cba-4a47-baa7-a1d031716be3",
             "sourceColumn": "Lead time",
             "summarizeBy": "sum"
           },
@@ -285,7 +819,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "9bd7db5b-2db3-4bb6-88d7-caf263710a27",
+            "lineageTag": "dc9d3296-71aa-46e0-9258-9db8edaf638a",
             "sourceColumn": "Production volumes",
             "summarizeBy": "sum"
           },
@@ -299,7 +833,7 @@
             ],
             "dataType": "int64",
             "formatString": "0",
-            "lineageTag": "1dcd4f9a-19be-45ed-9313-f4aed56ca1d7",
+            "lineageTag": "a074ad6d-67cc-4afe-a1cd-5f861dcd51b4",
             "sourceColumn": "Manufacturing lead time",
             "summarizeBy": "sum"
           },
@@ -316,22 +850,9 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "a01aba7e-4051-4627-a129-3244562041f8",
+            "lineageTag": "e60175e5-4280-4c4e-af63-83742394ac44",
             "sourceColumn": "Manufacturing costs",
             "summarizeBy": "sum"
-          },
-          {
-            "name": "Inspection results",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "9b4b998b-34fe-4c82-a374-42b796ea9afc",
-            "sourceColumn": "Inspection results",
-            "summarizeBy": "none"
           },
           {
             "name": "Defect rates",
@@ -346,35 +867,9 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "6fde3b43-e21b-4f68-8c13-4a9be6e90d10",
+            "lineageTag": "c6d0acc5-604c-4743-bbc1-1987ea9e9339",
             "sourceColumn": "Defect rates",
             "summarizeBy": "sum"
-          },
-          {
-            "name": "Transportation modes",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "4ab5304f-2bda-4377-8969-d460c63fd787",
-            "sourceColumn": "Transportation modes",
-            "summarizeBy": "none"
-          },
-          {
-            "name": "Routes",
-            "annotations": [
-              {
-                "name": "SummarizationSetBy",
-                "value": "Automatic"
-              }
-            ],
-            "dataType": "string",
-            "lineageTag": "bf93ba66-75b3-48ef-af19-3f8c70eb6fe6",
-            "sourceColumn": "Routes",
-            "summarizeBy": "none"
           },
           {
             "name": "Costs",
@@ -389,15 +884,147 @@
               }
             ],
             "dataType": "double",
-            "lineageTag": "ebf23635-4853-45dc-8276-0922ae56721c",
+            "lineageTag": "8df8fa45-1963-4a33-8757-9ebbf175b34f",
             "sourceColumn": "Costs",
             "summarizeBy": "sum"
+          },
+          {
+            "name": "product_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "20b8becf-53cd-4633-9a03-295adcbebeac",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "cust_demo_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "796cc3dc-983e-43ee-b047-91d29d4b894e",
+            "sourceColumn": "cust_demo_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ship_carriers_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "51bbd73b-f844-44ea-a5fa-0368ca960abf",
+            "sourceColumn": "ship_carriers_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "supplier_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c0524190-41c3-4283-bb0a-d3879bc38ebc",
+            "sourceColumn": "supplier_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "location_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "819837cd-a37f-4bb0-97b2-c2af1dbf05cd",
+            "sourceColumn": "location_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "inspection_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "7453ced6-97c6-4412-8b2a-ee5d1de4ea2a",
+            "sourceColumn": "inspection_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transportation_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "00bf2a73-2e6c-4edc-a8fb-8c78a7d90017",
+            "sourceColumn": "transportation_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "routes_id",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "50ceddb5-993a-40c1-8ce7-ddac8109a5d8",
+            "sourceColumn": "routes_id",
+            "summarizeBy": "none"
           }
         ],
-        "lineageTag": "a4c8a569-9611-464a-9381-cf4f50eb4b26",
+        "lineageTag": "81b4b7de-7699-4829-bf44-346f0820ae2f",
         "partitions": [
           {
-            "name": "supply_chain_data",
+            "name": "Fact_supply_data",
             "mode": "import",
             "source": {
               "expression": [
@@ -405,7 +1032,64 @@
                 "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
                 "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}})",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}}),",
+                "    #\"Added Conditional Column\" = Table.AddColumn(#\"Changed Type\", \"product_id\", each if [Product type] = \"haircare\" then 1 else if [Product type] = \"skincare\" then 2 else if [Product type] = \"cosmetics\" then 3 else null, type number),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Added Conditional Column\",{\"Product type\"}),",
+                "    #\"Added Conditional Column1\" = Table.AddColumn(#\"Removed Columns\", \"cust_demo_id\", each if [Customer demographics] = \"Female\" then 2 else if [Customer demographics] = \"Unknown\" then 4 else if [Customer demographics] = \"Non-binary\" then 3 else if [Customer demographics] = \"Male\" then 1 else null, type number),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Added Conditional Column1\",{\"Customer demographics\"}),",
+                "    #\"Added Conditional Column2\" = Table.AddColumn(#\"Removed Columns1\", \"ship_carriers_id\", each if [Shipping carriers] = \"Carrier B\" then 2 else if [Shipping carriers] = \"Carrier A\" then 1 else if [Shipping carriers] = \"Carrier C\" then 3 else null, type number),",
+                "    #\"Removed Columns2\" = Table.RemoveColumns(#\"Added Conditional Column2\",{\"Shipping carriers\"}),",
+                "    #\"Inserted Text After Delimiter\" = Table.AddColumn(#\"Removed Columns2\", \"supplier_id\", each Text.AfterDelimiter([Supplier name], \" \"), type text),",
+                "    #\"Removed Columns3\" = Table.RemoveColumns(#\"Inserted Text After Delimiter\",{\"Supplier name\"}),",
+                "    #\"Added Conditional Column3\" = Table.AddColumn(#\"Removed Columns3\", \"location_id\", each if [Location] = \"Mumbai\" then 5 else if [Location] = \"Kolkata\" then 4 else if [Location] = \"Delhi\" then 3 else if [Location] = \"Bangalore\" then 1 else if [Location] = \"Chennai\" then 2 else null, type number),",
+                "    #\"Removed Columns4\" = Table.RemoveColumns(#\"Added Conditional Column3\",{\"Location\"}),",
+                "    #\"Added Conditional Column4\" = Table.AddColumn(#\"Removed Columns4\", \"inspection_id\", each if [Inspection results] = \"Pending\" then 2 else if [Inspection results] = \"Fail\" then 3 else if [Inspection results] = \"Pass\" then 1 else null, type number),",
+                "    #\"Removed Columns5\" = Table.RemoveColumns(#\"Added Conditional Column4\",{\"Inspection results\"}),",
+                "    #\"Added Conditional Column5\" = Table.AddColumn(#\"Removed Columns5\", \"transportation_id\", each if [Transportation modes] = \"Road\" then 1 else if [Transportation modes] = \"Rail\" then 2 else if [Transportation modes] = \"Air\" then 4 else if [Transportation modes] = \"Sea\" then 3 else null, type number),",
+                "    #\"Removed Columns6\" = Table.RemoveColumns(#\"Added Conditional Column5\",{\"Transportation modes\"}),",
+                "    #\"Added Conditional Column6\" = Table.AddColumn(#\"Removed Columns6\", \"routes_id\", each if [Routes] = \"Route B\" then 2 else if [Routes] = \"Route C\" then 3 else if [Routes] = \"Route A\" then 1 else null, type number),",
+                "    #\"Removed Columns7\" = Table.RemoveColumns(#\"Added Conditional Column6\",{\"Routes\"})",
+                "in",
+                "    #\"Removed Columns7\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "_measures",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Column1",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2e9c8842-c795-4c13-98c3-2d1f96fc88ff",
+            "sourceColumn": "Column1",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6bfc29a8-06f9-4853-927d-3ebcb6c2156e",
+        "partitions": [
+          {
+            "name": "_measures",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText(\"i44FAA==\", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(Source,{{\"Column1\", type text}})",
                 "in",
                 "    #\"Changed Type\""
               ],
