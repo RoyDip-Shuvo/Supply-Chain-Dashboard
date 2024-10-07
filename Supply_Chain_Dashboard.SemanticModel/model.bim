@@ -1,0 +1,419 @@
+{
+  "compatibilityLevel": 1550,
+  "model": {
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.136.1202.0 (24.09)"
+      },
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"supply_chain_data\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "cultures": [
+      {
+        "name": "en-US",
+        "linguisticMetadata": {
+          "content": {
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "supply_chain_data",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Product type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f7931307-671f-4442-b5d0-538ea5428baa",
+            "sourceColumn": "Product type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SKU",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6565bc09-d97a-4d54-8aa7-561eaacc257e",
+            "sourceColumn": "SKU",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Price",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "725672a0-4674-4c34-bd6c-55b3bf26be3d",
+            "sourceColumn": "Price",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Availability",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "d20dfc1e-970a-48b9-9d77-b98f0d759db0",
+            "sourceColumn": "Availability",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Number of products sold",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a2de1553-18ad-45f3-b798-eb75f5ba8413",
+            "sourceColumn": "Number of products sold",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Revenue generated",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "ad6c2ebc-a0db-44fc-a58e-3537ea93242d",
+            "sourceColumn": "Revenue generated",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Customer demographics",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8c76580f-1e3e-412a-bfda-8dec20bf1b79",
+            "sourceColumn": "Customer demographics",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Stock levels",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "e6bc6e89-6d94-4403-b0c1-2ec3ca837892",
+            "sourceColumn": "Stock levels",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Lead times",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "2c777ac8-a2c5-4926-b96c-63a7419fbd29",
+            "sourceColumn": "Lead times",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Order quantities",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "26fa7695-5adf-4d45-9797-9634173042de",
+            "sourceColumn": "Order quantities",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Shipping times",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "01fc5202-3c96-4e92-b2cc-672925151c59",
+            "sourceColumn": "Shipping times",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Shipping carriers",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c1e9ecdb-3a17-4119-b789-0032a828c31e",
+            "sourceColumn": "Shipping carriers",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Shipping costs",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "9601bbaa-5f86-4a14-83f0-4f79e87669a1",
+            "sourceColumn": "Shipping costs",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Supplier name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ba0e8a39-ba45-4558-963e-3f959560b3f3",
+            "sourceColumn": "Supplier name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "33f01f48-0c02-4d7e-882f-1dce2869d356",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Lead time",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "149e5f57-7cf5-46e1-86e6-60e44bdb5769",
+            "sourceColumn": "Lead time",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Production volumes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "9bd7db5b-2db3-4bb6-88d7-caf263710a27",
+            "sourceColumn": "Production volumes",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Manufacturing lead time",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "1dcd4f9a-19be-45ed-9313-f4aed56ca1d7",
+            "sourceColumn": "Manufacturing lead time",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Manufacturing costs",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "a01aba7e-4051-4627-a129-3244562041f8",
+            "sourceColumn": "Manufacturing costs",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Inspection results",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9b4b998b-34fe-4c82-a374-42b796ea9afc",
+            "sourceColumn": "Inspection results",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Defect rates",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "6fde3b43-e21b-4f68-8c13-4a9be6e90d10",
+            "sourceColumn": "Defect rates",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Transportation modes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "4ab5304f-2bda-4377-8969-d460c63fd787",
+            "sourceColumn": "Transportation modes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Routes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "bf93ba66-75b3-48ef-af19-3f8c70eb6fe6",
+            "sourceColumn": "Routes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Costs",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "ebf23635-4853-45dc-8276-0922ae56721c",
+            "sourceColumn": "Costs",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "a4c8a569-9611-464a-9381-cf4f50eb4b26",
+        "partitions": [
+          {
+            "name": "supply_chain_data",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(\"H:\\_Portfolio Project Github\\Supply Chain Dashboard\\Supply Chain Dashboard Live.xlsx\"), null, true),",
+                "    supply_chain_data_Sheet = Source{[Item=\"supply_chain_data\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(supply_chain_data_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Product type\", type text}, {\"SKU\", type text}, {\"Price\", type number}, {\"Availability\", Int64.Type}, {\"Number of products sold\", Int64.Type}, {\"Revenue generated\", type number}, {\"Customer demographics\", type text}, {\"Stock levels\", Int64.Type}, {\"Lead times\", Int64.Type}, {\"Order quantities\", Int64.Type}, {\"Shipping times\", Int64.Type}, {\"Shipping carriers\", type text}, {\"Shipping costs\", type number}, {\"Supplier name\", type text}, {\"Location\", type text}, {\"Lead time\", Int64.Type}, {\"Production volumes\", Int64.Type}, {\"Manufacturing lead time\", Int64.Type}, {\"Manufacturing costs\", type number}, {\"Inspection results\", type text}, {\"Defect rates\", type number}, {\"Transportation modes\", type text}, {\"Routes\", type text}, {\"Costs\", type number}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
