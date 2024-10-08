@@ -1238,11 +1238,16 @@
           },
           {
             "name": "Stock Lavel",
-            "expression": "CONCATENATE(AVERAGE(Fact_supply_data[Stock levels]), \"%\")",
+            "expression": [
+              "",
+              " VAR _cal = FORMAT(AVERAGE(Fact_supply_data[Stock levels]),\"#.##\")",
+              "RETURN",
+              "CONCATENATE(_cal, \"%\")"
+            ],
             "lineageTag": "6b530821-80a0-4811-b277-f5a54d3b42eb"
           },
           {
-            "name": "Deffect Item %",
+            "name": "Deffect Item",
             "expression": [
               "",
               "VAR deftect_items = FORMAT(AVERAGE(Fact_supply_data[Defect rates]), \"#.##\")",
@@ -1272,7 +1277,7 @@
             "lineageTag": "53acc7d3-28a3-4ddb-bb60-d7694356d95e"
           },
           {
-            "name": "def Rate",
+            "name": "% Deffect Items",
             "annotations": [
               {
                 "name": "PBI_FormatHint",
@@ -1304,6 +1309,12 @@
             ],
             "expression": "[cost]- [mfc_cost] - [shiping cost]",
             "lineageTag": "d95b9ee3-7594-4235-9f93-1a3c035f77e1"
+          },
+          {
+            "name": "Gauge max",
+            "expression": "30",
+            "formatString": "0",
+            "lineageTag": "8fb8c3b1-c7aa-426e-a9fb-cad701cacaaa"
           }
         ],
         "partitions": [
