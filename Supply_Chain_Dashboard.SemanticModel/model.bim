@@ -1208,6 +1208,7 @@
           },
           {
             "name": "Gross Profit",
+            "displayFolder": "_Lead Time Analysis",
             "expression": "[Revenue]-([shiping cost]+[mfc_cost]+[cost])",
             "formatString": "\\$#,0.0;(\\$#,0.0);\\$#,0.0",
             "lineageTag": "5e695edc-9519-4c70-9eb1-cb30687d0c27"
@@ -1312,9 +1313,103 @@
           },
           {
             "name": "Gauge max",
+            "displayFolder": "_Lead Time Analysis",
             "expression": "30",
             "formatString": "0",
             "lineageTag": "8fb8c3b1-c7aa-426e-a9fb-cad701cacaaa"
+          },
+          {
+            "name": "Lead Time Target",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": "MIN(Fact_supply_data[Lead time])+10",
+            "formatString": "0",
+            "lineageTag": "f64b31a5-266f-45b6-bcfe-238a356fe55e"
+          },
+          {
+            "name": "Lead time color",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Lead time]>[Lead Time Target],",
+              "    \"#C83600\",",
+              "    \"#00C000\")"
+            ],
+            "lineageTag": "199275b5-af0e-4008-b62b-4382066fb295"
+          },
+          {
+            "name": "Risk Factor Color",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Risk Factor] > -30, \"#C83600\",",
+              "    [Risk Factor] > -80, \"#FFA500\",",
+              "    [Risk Factor] > -12000000 ,\"#00C000\"",
+              ")"
+            ],
+            "lineageTag": "64dc0b7a-b0f2-43a3-ba4e-ab5b58f04b7d"
+          },
+          {
+            "name": "Order lead time target",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": "MIN(Fact_supply_data[Order Lead Time])+10",
+            "formatString": "0",
+            "lineageTag": "c886d1ba-3576-44ca-b286-7158defbd310"
+          },
+          {
+            "name": "Color Order_leadtime",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Order lead time]>[Order lead time target],",
+              "    \"#C83600\",",
+              "    \"#00C000\")"
+            ],
+            "lineageTag": "ab310a32-1c2f-4fd7-bed7-0cdf48baf0a4"
+          },
+          {
+            "name": "MFC_lead time target",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": "MIN(Fact_supply_data[Manufacturing lead time])+10",
+            "formatString": "0",
+            "lineageTag": "64e55038-d8e7-4e2e-a3c8-def7b19255de"
+          },
+          {
+            "name": "Color_MFC",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Mfc Lead time]>[MFC_lead time target],",
+              "    \"#C83600\",",
+              "    \"#00C000\")"
+            ],
+            "lineageTag": "7ca07cb2-cf06-4ff5-93e4-a7eee8302e0a"
+          },
+          {
+            "name": "Shiptime Target",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": "MIN(Fact_supply_data[Shipping times]) +2",
+            "formatString": "0",
+            "lineageTag": "3b9ebf71-4563-4ca2-bca1-584691d1553f"
+          },
+          {
+            "name": "Color_Shiptime",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Shiping time] > [Shiptime Target],",
+              "    \"#C83600\",",
+              "    \"#00C000\")"
+            ],
+            "lineageTag": "4890ec32-2e7a-4b96-94b2-a65d1aec02c0"
           }
         ],
         "partitions": [
