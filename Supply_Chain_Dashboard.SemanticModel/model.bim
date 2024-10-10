@@ -1136,6 +1136,22 @@
           }
         ],
         "lineageTag": "81b4b7de-7699-4829-bf44-346f0820ae2f",
+        "measures": [
+          {
+            "name": "Row Color",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Risk Factor] > -30, \"#FFC288\", // Lighter Dark Orange",
+              "    [Risk Factor] > -80, \"#E5BB7D\", // Lighter Burnt Orange",
+              "    [Risk Factor] > -12000000 ,\"#B2FFB2\" // Lighter Dark Green",
+              ")",
+              ""
+            ],
+            "lineageTag": "74c61808-7d43-4b56-b3ca-2555c2fd7a0b"
+          }
+        ],
         "partitions": [
           {
             "name": "Fact_supply_data",
@@ -1251,7 +1267,7 @@
             "name": "Deffect Item",
             "expression": [
               "",
-              "VAR deftect_items = FORMAT(AVERAGE(Fact_supply_data[Defect rates]), \"#.##\")",
+              "VAR deftect_items = FORMAT(AVERAGE(Fact_supply_data[Defect rates]), \"0.##\")",
               "RETURN",
               "CONCATENATE(deftect_items,\"%\")",
               ""
@@ -1293,11 +1309,10 @@
             "annotations": [
               {
                 "name": "PBI_FormatHint",
-                "value": "{\"isDecimal\":true}"
+                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "expression": "SUMX(Fact_supply_data, Fact_supply_data[Order Lead Time]*(1-Fact_supply_data[Stock levels]))",
-            "formatString": "0",
             "lineageTag": "d9cbf7fd-19bd-445a-a8c9-af7a8566dfb9"
           },
           {
@@ -1410,6 +1425,70 @@
               "    \"#00C000\")"
             ],
             "lineageTag": "4890ec32-2e7a-4b96-94b2-a65d1aec02c0"
+          },
+          {
+            "name": "Order QTY",
+            "expression": "SUM(Fact_supply_data[Order quantities])",
+            "formatString": "0",
+            "lineageTag": "65a11921-ebc3-4e43-bdfb-0ccc3d1e424b"
+          },
+          {
+            "name": "Top N Revenue",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "expression": [
+              "",
+              "VAR top_rev_count = SELECTEDVALUE (Parameter[Parameter]) // Replace with your desired top N value",
+              "RETURN",
+              "CALCULATE (",
+              "    MAX(Fact_supply_data[Revenue generated]), // Corrected argument",
+              "    FILTER(",
+              "        ALLEXCEPT('Fact_supply_data', 'Fact_supply_data'[SKU]),",
+              "        RANKX(",
+              "            ALLEXCEPT('Fact_supply_data', 'Fact_supply_data'[SKU]),",
+              "            Fact_supply_data[Revenue generated]",
+              "        ) <= top_rev_count",
+              "    )",
+              ")"
+            ],
+            "lineageTag": "00b13435-07d0-46d5-bfcf-57c0080bdc38"
+          },
+          {
+            "name": "Top_N Riskfactor",
+            "displayFolder": "_Lead Time Analysis",
+            "expression": [
+              "",
+              "VAR top_rev_count = SELECTEDVALUE (Parameter[Parameter]) // Replace with your desired top N value",
+              "RETURN",
+              "CALCULATE (",
+              "    MAX(VALUES([risk facktor])),",
+              "    FILTER(",
+              "        ALLEXCEPT('Fact_supply_data', [YourMeasure]),",
+              "        RANKX(",
+              "            ALLEXCEPT('Fact_supply_data', [YourMeasure]),",
+              "            Fact_supply_data[Revenue generated]",
+              "        ) <= top_rev_count",
+              "    )",
+              ")"
+            ],
+            "lineageTag": "30b0382f-108e-48e2-8e61-5434bcbcde1b"
+          },
+          {
+            "name": "Risk_Factor Color_matrix",
+            "expression": [
+              "",
+              "SWITCH(",
+              "    TRUE(),",
+              "    [Risk Factor] > -30, \"#FF966F\",",
+              "    [Risk Factor] > -80, \"#FFE4B4\",",
+              "    [Risk Factor] > -12000000 ,\"#9DEB9D\"",
+              ")"
+            ],
+            "lineageTag": "5e9c214d-edf7-4d00-8512-372a6a25bfb5"
           }
         ],
         "partitions": [
@@ -1426,6 +1505,62 @@
                 "    #\"Removed Columns\""
               ],
               "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Parameter",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "bfce22d70e94488b935afb4da8c7bb40"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Parameter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "extendedProperties": [
+              {
+                "name": "ParameterMetadata",
+                "type": "json",
+                "value": {
+                  "version": 0
+                }
+              }
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isNameInferred": false,
+            "lineageTag": "3c71b3ca-50ce-4699-b8bd-b37cbf299a03",
+            "sourceColumn": "[Value]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "lineageTag": "4fb860d0-dee9-4566-959f-d8d5b65370ff",
+        "measures": [
+          {
+            "name": "Parameter Value",
+            "expression": "SELECTEDVALUE('Parameter'[Parameter], 10)",
+            "formatString": "0",
+            "lineageTag": "e58627c6-992c-48af-81b1-8e9218dab47f"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Parameter",
+            "mode": "import",
+            "source": {
+              "expression": "GENERATESERIES(10, 50, 5)",
+              "type": "calculated"
             }
           }
         ]
