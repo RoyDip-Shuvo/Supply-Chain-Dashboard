@@ -1,1 +1,2 @@
 #Supply Chain Dashboard
+Live Dashboard [https://app.powerbi.com/view?r=eyJrIjoiZDk5Y2E2NWQtNDJiMy00MTM1LWIwN2QtNGIzYjY3MDRlZTUxIiwidCI6ImM2ZTU0OWIzLTVmNDUtNDAzMi1hYWU5LWQ0MjQ0ZGM1YjJjNCJ9]
